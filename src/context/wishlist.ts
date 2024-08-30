@@ -22,7 +22,11 @@ export const wishlist = (
       } else {
         state = state.filter((item: IProduct) => item.id !== payload.id);
       }
-      saveToStorage("wishlist", state);
+      try {
+        saveToStorage("wishlist", state);
+      } catch (err) {
+        console.warn(err);
+      }
       return state;
     default:
       return state;

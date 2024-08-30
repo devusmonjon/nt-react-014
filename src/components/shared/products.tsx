@@ -1,3 +1,4 @@
+"use client";
 import { IProduct } from "@/interfaces";
 import {
   Card,
