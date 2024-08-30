@@ -18,18 +18,45 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formSchema } from "../schemas";
+import { useDispatch } from "react-redux";
+import axios from "@/api";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+  const dispatch = useDispatch();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
+  const router = useRouter();
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    axios
+      .post("auth/login", values)
+      .then((res) => {
+        dispatch({ type: "LOGIN", payload: res.data.token });
+        toast.success("Successfully login", {
+          position: "top-center",
+        });
+        setTimeout(() => {
+          toast.success("Redirecting...", {
+            position: "top-center",
+          });
+        }, 500);
+        setTimeout(() => {
+          router.push("/");
+        }, 600);
+      })
+      .catch((err) => {
+        toast.error("Invalid creadentials...", {
+          position: "top-center",
+        });
+      });
   };
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
@@ -45,14 +72,14 @@ const Page = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
               <FormField
                 control={form.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem className="grid gap-2">
-                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormLabel htmlFor="username">Email</FormLabel>
                     <FormControl>
                       <Input
-                        id="email"
-                        placeholder="m@example.com"
+                        id="username"
+                        placeholder="emilys"
                         aria-required={true}
                         // required
                         {...field}
@@ -77,7 +104,12 @@ const Page = () => {
                       </Link>
                     </div>
                     <FormControl>
-                      <Input id="password" type="password" {...field} />
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="emilyspass"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
