@@ -1,8 +1,17 @@
+import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+import { cn } from "@/lib/utils";
+import Navbar from "@/components/shared/navbar";
+import { Toaster } from "sonner";
+import { ContextProvider } from "@/components/context-provider";
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,8 +24,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <ContextProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <main>{children}</main>
+            <Toaster />
+          </ThemeProvider>
+        </ContextProvider>
+      </body>
     </html>
   );
 }
