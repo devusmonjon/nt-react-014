@@ -10,7 +10,7 @@ import {
 } from "../ui/card";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { IoIosHeart } from "react-icons/io";
+import { IoIosHeart, IoIosHeartDislike } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 
 const Products = ({
@@ -24,12 +24,11 @@ const Products = ({
   const wishlist = useSelector(
     (state: { wishlist: IProduct[] }) => state.wishlist
   );
-  console.log(wishlist);
 
   return (
     <section className="py-10">
       <div className="container">
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {data.map((product: IProduct) => (
             <Card key={product.id} className="relative h-[500px]">
               <CardContent className="w-full h-[280px] relative hover:scale-105 duration-300">
@@ -53,7 +52,11 @@ const Products = ({
                     dispatch({ type: "TOGGLE_WISHLIST", payload: product })
                   }
                 >
-                  <IoIosHeart size={25} className="" color="red" />
+                  {wishlist.some((item: IProduct) => item.id === product.id) ? (
+                    <IoIosHeartDislike size={25} className="text-red-900" />
+                  ) : (
+                    <IoIosHeart size={25} className="" color="red" />
+                  )}
                 </Button>
               </CardFooter>
             </Card>
