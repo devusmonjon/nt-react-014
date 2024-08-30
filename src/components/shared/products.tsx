@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { IoIosHeart, IoIosHeartDislike } from "react-icons/io";
+import { MdRemoveShoppingCart, MdShoppingCart } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
 const Products = ({
@@ -24,6 +25,8 @@ const Products = ({
   const wishlist = useSelector(
     (state: { wishlist: IProduct[] }) => state.wishlist
   );
+  const cart = useSelector((state: { cart: IProduct[] }) => state.cart);
+  console.log(cart);
 
   return (
     <section className="py-10">
@@ -45,7 +48,7 @@ const Products = ({
                   {product.description.slice(0, 90)} ...
                 </CardDescription>
               </CardHeader>
-              <CardFooter className="absolute w-full bottom-[0px]">
+              <CardFooter className="absolute w-full bottom-[0px] flex item-center justify-between">
                 <Button
                   variant={"ghost"}
                   onClick={() =>
@@ -56,6 +59,18 @@ const Products = ({
                     <IoIosHeartDislike size={25} className="text-red-900" />
                   ) : (
                     <IoIosHeart size={25} className="" color="red" />
+                  )}
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  onClick={() =>
+                    dispatch({ type: "TOGGLE_CART", payload: product })
+                  }
+                >
+                  {cart.some((item: IProduct) => item.id === product.id) ? (
+                    <MdRemoveShoppingCart size={20} />
+                  ) : (
+                    <MdShoppingCart size={20} />
                   )}
                 </Button>
               </CardFooter>
