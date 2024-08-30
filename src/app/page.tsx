@@ -5,6 +5,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const Page = () => {
   const router = useRouter();
@@ -14,6 +15,9 @@ const Page = () => {
   useEffect(() => {
     if (!token) {
       router.push("/login");
+      toast.error("No access", {
+        position: "top-center",
+      });
     }
     console.log(token);
   }, [token]);
